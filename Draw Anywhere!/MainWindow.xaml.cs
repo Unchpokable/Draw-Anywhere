@@ -97,6 +97,8 @@ namespace DrawAnywhere
 
             if (e.HotKey.Equals(_hideHotKey) || e.HotKey.Key == Key.Escape)
             {
+                _lastActions.Clear();
+                DrawField.Strokes.Clear();
                 Hide();
                 _showOverlay = false;
 
