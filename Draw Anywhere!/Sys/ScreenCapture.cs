@@ -31,7 +31,7 @@ namespace DrawAnywhere.Sys
             ReleaseDC(desktopWindow, desktopDC);
 
             if (autosave)
-                SaveScreenshot(screenShot, Path.Combine(Environment.SpecialFolder.MyPictures.ToString(), "DrawAnywhere!", $"{DateTime.Now}"));
+                SaveScreenshot(screenShot, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "DrawAnywhere!", $"{DateTime.Now}"));
 
             if (copyToClipboard)
                 Clipboard.SetImage(screenShot);
