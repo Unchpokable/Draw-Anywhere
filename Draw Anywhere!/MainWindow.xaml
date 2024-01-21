@@ -5,6 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:DrawAnywhere.ViewModels"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:core="clr-namespace:DrawAnywhere.MvvmCore"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         AllowsTransparency="True"
@@ -15,6 +17,17 @@
         <viewModels:MainViewModel></viewModels:MainViewModel>
     </Window.DataContext>
 
+    <Window.InputBindings>
+        <KeyBinding Key="Escape"
+                    Command="{Binding HideOverlay}"></KeyBinding>
+    </Window.InputBindings>
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="LostFocus">
+            <i:InvokeCommandAction Command="{Binding HideOverlay}"></i:InvokeCommandAction>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+        
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -42,6 +55,31 @@
                        RenderOptions.EdgeMode="Aliased"
                        x:Name="DrawField"
                    DefaultDrawingAttributes="{Binding DrawingAttributes}">
+            <InkCanvas.InputBindings>
+                <KeyBinding Key="Z" Modifiers="Control"
+                            Command="{Binding CallUndo}"></KeyBinding>
+
+                <KeyBinding Key="Escape"
+                            Command="{Binding HideOverlay}"></KeyBinding>
+
+                <KeyBinding Key="C"
+                            Command="{Binding ShowTool}"
+                            CommandParameter="{x:Static viewModels:ModalWindowType.ColorPicker}"></KeyBinding>
+
+                <KeyBinding Key="P"
+                            Command="{Binding ShowTool}"
+                            CommandParameter="{x:Static viewModels:ModalWindowType.PenConfig}"></KeyBinding>
+
+                <KeyBinding Key="S" Modifiers="Alt"
+                            Command="{Binding MakeScreenShot}"></KeyBinding>
+            </InkCanvas.InputBindings>
+
+
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="GotFocus">
+                    <i:InvokeCommandAction Command="{Binding HideUi}"></i:InvokeCommandAction>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
         </InkCanvas>
 
         <ItemsControl Grid.Row="0"
@@ -51,8 +89,7 @@
                       Margin="10">
         </ItemsControl>
 
-        <Border Grid.Row="1" Background="#FF404040"
-                >
+        <Border Grid.Row="1" Background="#FF404040">
             <StackPanel 
                     Orientation="Horizontal"
                     HorizontalAlignment="Left"
@@ -66,6 +103,7 @@
                         <materialDesign:PackIcon Kind="Palette"
                                              Foreground="White"></materialDesign:PackIcon>
                     </Button.Content>
+
                 </Button>
 
                 <Button Width="50"

@@ -26,12 +26,20 @@ namespace DrawAnywhere.ViewModels
             
             ShowTool = new RelayCommand(ShowUserTool);
             MakeScreenShot = new RelayCommand(CaptureScreenshot);
+            CallUndo = new RelayCommand(OnUndoCalled);
+            HideOverlay = new RelayCommand(OnHideCalled);
+            HideUi = new RelayCommand(HideUiComponents);
 
             _penColor.ValueChanged += UpdateDrawingAttributes;
             
-            RegisterKeyBindings();
         }
 
+        public event EventHandler UndoRequested;
+        public event EventHandler HideRequested;
+
+        public RelayCommand HideUi { get; set; }
+        public RelayCommand HideOverlay { get; set; }
+        public RelayCommand CallUndo { get; set; }
         public RelayCommand ShowTool { get; set; }
         public RelayCommand MakeScreenShot { get; set; }
 
@@ -92,35 +100,31 @@ namespace DrawAnywhere.ViewModels
             OnPropertyChanged(nameof(VisibleControls));
         }
 
+        private void HideUiComponents(object _)
+        {
+            VisibleControls.Remove(_colorSelection);
+            VisibleControls.Remove(_penConfig);
+        }
+
         private void UpdateDrawingAttributes(object sender, Color e)
         {
             _drawingAttributes.Color = e;
             OnPropertyChanged(nameof(DrawingAttributes));
         }
 
-        private void RegisterKeyBindings()
-        {
-            var showColors = new HotKey(Key.C, ModifierKeys.Alt | ModifierKeys.Shift);
-
-            var showPen = new HotKey(Key.P, ModifierKeys.Alt | ModifierKeys.Shift);
-
-            var showColorsConfigAction = () =>
-            {
-                ShowUserTool(ModalWindowType.ColorPicker);
-            };
-
-            var showPenConfigAction = () =>
-            {
-                ShowUserTool(ModalWindowType.PenConfig);
-            };
-
-            MainWindow.RegisterHotKey(showColors, showColorsConfigAction);
-            MainWindow.RegisterHotKey(showPen, showPenConfigAction);
-        }
-
         private void CaptureScreenshot(object _)
         {
             ScreenCapture.MakeScreenshot(true, true);
+        }
+
+        private void OnUndoCalled(object _)
+        {
+            UndoRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnHideCalled(object _)
+        {
+            HideRequested?.Invoke(this, EventArgs.Empty);
         }
     }
 }

@@ -7,6 +7,7 @@
              xmlns:pixiColors="clr-namespace:ColorPicker;assembly=ColorPicker"
              xmlns:vm="clr-namespace:DrawAnywhere.ViewModels"
              xmlns:convs="clr-namespace:DrawAnywhere.MvvmCore.Converters"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="400"
              Height="620" Width="420"

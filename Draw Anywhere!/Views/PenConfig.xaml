@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:local="clr-namespace:DrawAnywhere.Views"
+             xmlns:vm="clr-namespace:DrawAnywhere.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="220" d:DesignWidth="600"
              Height="220" Width="600">
