@@ -1,8 +1,18 @@
 ﻿<Application x:Class="DrawAnywhere.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:DrawAnywhere.ViewModels"
+             xmlns:view="clr-namespace:DrawAnywhere.Views"
+             xmlns:converters="clr-namespace:DrawAnywhere.MvvmCore.Converters"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+
+        <DataTemplate x:Shared="True" DataType="{x:Type vm:ColorSelectionViewModel}">
+            <view:ColorSelection/>
+        </DataTemplate>
+
+        <DataTemplate x:Shared="True" DataType="{x:Type vm:PenConfigViewModel}">
+            <view:PenConfig/>
+        </DataTemplate>
     </Application.Resources>
 </Application>

@@ -3,32 +3,105 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:DrawAnywhere.ViewModels"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         AllowsTransparency="True"
         Background="Transparent"
         WindowStyle="None">
 
+    <Window.DataContext>
+        <viewModels:MainViewModel></viewModels:MainViewModel>
+    </Window.DataContext>
 
-    <Grid>
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.GroupBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.listview.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.RadioButton.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.ComboBox.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+<Grid x:Name="RootGrid">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition
-                Height="50"/>
+                Height="70"/>
         </Grid.RowDefinitions>
 
-        <InkCanvas Background="Transparent"
-                   Cursor="Pen"
-                   Grid.RowSpan="2"
-                   x:Name="DrawField">
+        <InkCanvas Grid.Row="0"
+            Background="#19373737"
+                       Grid.RowSpan="2"
+                       MoveEnabled="True"
+                       RenderOptions.EdgeMode="Aliased"
+                       x:Name="DrawField"
+                   DefaultDrawingAttributes="{Binding DrawingAttributes}">
         </InkCanvas>
 
-        <StackPanel Grid.Row="1"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Left">
-            <Button Width="50"
-                    Margin="10"/>
-        </StackPanel>
+        <ItemsControl Grid.Row="0"
+                      ItemsSource="{Binding VisibleControls}"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Bottom"
+                      Margin="10">
+        </ItemsControl>
 
+        <Border Grid.Row="1" Background="#FF404040"
+                >
+            <StackPanel 
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Left"
+                    Margin="10 0 10 0">
+
+                <Button Width="50"
+                        Style="{StaticResource MaterialDesignIconButton}"
+                        Background="#FF545454"
+                        Command="{Binding ShowTool}" CommandParameter="{x:Static viewModels:ModalWindowType.ColorPicker}">
+                    <Button.Content>
+                        <materialDesign:PackIcon Kind="Palette"
+                                             Foreground="White"></materialDesign:PackIcon>
+                    </Button.Content>
+                </Button>
+
+                <Button Width="50"
+                        Style="{StaticResource MaterialDesignIconButton}"
+                        Background="#FF545454"
+                        Command="{Binding ShowTool}" CommandParameter="{x:Static viewModels:ModalWindowType.PenConfig}"
+                        Margin="10 0 0 0">
+                    <Button.Content>
+                        <materialDesign:PackIcon Kind="Pen"
+                                                 Foreground="White"></materialDesign:PackIcon>
+                    </Button.Content>
+                </Button>
+
+                <Button Width="50"
+                        Style="{StaticResource MaterialDesignIconButton}"
+                        Background="#FF545454"
+                        Command="{Binding TakeScreenshot}" CommandParameter="{x:Static viewModels:ModalWindowType.PenConfig}"
+                        Margin="10 0 0 0">
+                    <Button.Content>
+                        <materialDesign:PackIcon Kind="Camera"
+                                                 Foreground="White"></materialDesign:PackIcon>
+                    </Button.Content>
+                </Button>
+
+                <Button Width="50"
+                        Style="{StaticResource MaterialDesignIconButton}"
+                        Background="#FF545454"
+                        Command="{Binding ShowSettings}" CommandParameter="{x:Static viewModels:ModalWindowType.PenConfig}"
+                        Margin="10 0 0 0">
+                    <Button.Content>
+                        <materialDesign:PackIcon Kind="Gear"
+                                                 Foreground="White"></materialDesign:PackIcon>
+                    </Button.Content>
+                </Button>
+
+            </StackPanel>
+        </Border>
     </Grid>
 </Window>

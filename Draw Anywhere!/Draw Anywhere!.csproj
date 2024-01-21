@@ -2,20 +2,24 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net7.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <RootNamespace>DrawAnywhere</RootNamespace>
     <Nullable>disable</Nullable>
     <UseWPF>true</UseWPF>
+    <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="GlobalHotKey" Version="1.1.0" />
+    <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.1.0" />
     <PackageReference Include="MaterialDesignThemes" Version="4.9.0" />
+    <PackageReference Include="Notifications.Wpf" Version="0.1.1" />
+    <PackageReference Include="PixiEditor.ColorPicker" Version="3.4.1" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Models\" />
-    <Folder Include="System\" />
   </ItemGroup>
 
 </Project>
