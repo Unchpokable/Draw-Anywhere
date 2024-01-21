@@ -32,6 +32,10 @@ namespace DrawAnywhere
 
             ((MainViewModel)DataContext).UndoRequested += (s, e) => UndoStrokes();
             ((MainViewModel)DataContext).HideRequested += (s, e) => HideOverlay();
+            ((MainViewModel)DataContext).ShowRequested += (s, e) => ShowOverlay();
+            ((MainViewModel)DataContext).QuitRequested += (s, e) => Application.Current.Shutdown();
+
+            DrawAnywhereTrayIcon.Icon = Properties.Resources.pen;
         }
 
         ~MainWindow()
@@ -49,14 +53,9 @@ namespace DrawAnywhere
 
         private void RegisterDefaultHotKeys()
         {
-            //_hideHotKey = new HotKey(Key.Escape, ModifierKeys.None);
-            //_applicationHotKeyManager.Register(_hideHotKey);
 
             _showHotKey = new HotKey(Key.D, ModifierKeys.Shift | ModifierKeys.Alt);
             _applicationHotKeyManager.Register(_showHotKey);
-
-            //_undoHotKey = new HotKey(Key.Z, ModifierKeys.Control);
-            //_applicationHotKeyManager.Register(_undoHotKey);
 
             _applicationHotKeyManager.KeyPressed += HandleKeyPressed;
         }
@@ -65,22 +64,30 @@ namespace DrawAnywhere
         {
             if (e.HotKey.Equals(_showHotKey))
             {
-                _lastActions.Clear();
-                DrawField.Strokes.Clear();
-                FitWindowSizeAndPositionToActiveMonitor();
-                Show();
-                Focus();
+                ShowOverlay();
             }
         }
 
         private void HideOverlay()
         {
+            _lastActions.Clear();
+            DrawField.Strokes.Clear();
             Hide();
         }
 
         private void OnFocusLost(object sender, EventArgs e)
         {
+            _lastActions.Clear();
+            DrawField.Strokes.Clear();
             Hide();
+        }
+
+        private void ShowOverlay()
+        {
+            FitWindowSizeAndPositionToActiveMonitor();
+            Show();
+            Focus();
+            DrawField.Focus();
         }
 
         private void UndoStrokes()
@@ -118,6 +125,13 @@ namespace DrawAnywhere
                     Topmost = true;
                 }
             }
+        }
+
+        protected override void OnGotFocus(RoutedEventArgs e)
+        {
+            base.OnGotFocus(e);
+
+            DrawField.Focus();
         }
     }
 }

@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
 using DrawAnywhere.MvvmCore;
 using DrawAnywhere.Sys;
 using GlobalHotKey;
+using Color = System.Windows.Media.Color;
+using Hardcodet.Wpf.TaskbarNotification;
 
 namespace DrawAnywhere.ViewModels
 {
@@ -29,14 +32,19 @@ namespace DrawAnywhere.ViewModels
             CallUndo = new RelayCommand(OnUndoCalled);
             HideOverlay = new RelayCommand(OnHideCalled);
             HideUi = new RelayCommand(HideUiComponents);
+            ShowOverlay = new RelayCommand(OnOverlayCalled);
+            Quit = new RelayCommand(OnQuitRequested);
 
             _penColor.ValueChanged += UpdateDrawingAttributes;
-            
         }
 
         public event EventHandler UndoRequested;
         public event EventHandler HideRequested;
+        public event EventHandler ShowRequested;
+        public event EventHandler QuitRequested;
 
+        public RelayCommand Quit { get; set; }
+        public RelayCommand ShowOverlay { get; set; }
         public RelayCommand HideUi { get; set; }
         public RelayCommand HideOverlay { get; set; }
         public RelayCommand CallUndo { get; set; }
@@ -125,6 +133,16 @@ namespace DrawAnywhere.ViewModels
         private void OnHideCalled(object _)
         {
             HideRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnOverlayCalled(object _)
+        {
+            ShowRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnQuitRequested(object _)
+        {
+            QuitRequested?.Invoke(this, EventArgs.Empty);
         }
     }
 }

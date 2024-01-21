@@ -68,5 +68,15 @@ namespace DrawAnywhere.Properties {
                 return ResourceManager.GetStream("cam", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+        /// </summary>
+        internal static System.Drawing.Icon pen {
+            get {
+                object obj = ResourceManager.GetObject("pen", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
     }
 }
