@@ -25,6 +25,7 @@ namespace DrawAnywhere.ViewModels
             _penConfig.PropertyChanged += (s, e) => OnPropertyChanged(nameof(DrawingAttributes));
             
             ShowTool = new RelayCommand(ShowUserTool);
+            MakeScreenShot = new RelayCommand(CaptureScreenshot);
 
             _penColor.ValueChanged += UpdateDrawingAttributes;
             
@@ -32,6 +33,7 @@ namespace DrawAnywhere.ViewModels
         }
 
         public RelayCommand ShowTool { get; set; }
+        public RelayCommand MakeScreenShot { get; set; }
 
         public ObservableCollection<ObservableObject> VisibleControls { get; set; }
 
@@ -116,9 +118,9 @@ namespace DrawAnywhere.ViewModels
             MainWindow.RegisterHotKey(showPen, showPenConfigAction);
         }
 
-        private void TakeScreenshotInternal()
+        private void CaptureScreenshot(object _)
         {
-
+            ScreenCapture.MakeScreenshot(true, true);
         }
     }
 }

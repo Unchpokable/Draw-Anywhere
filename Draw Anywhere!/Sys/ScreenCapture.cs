@@ -1,18 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using DrawAnywhere.SFX;
 using static DrawAnywhere.Sys.WinApi;
 
 namespace DrawAnywhere.Sys
 {
     internal class ScreenCapture
     {
+        static ScreenCapture()
+        {
+            _sfx = new SfxProvider();
+        }
+
+        private static SfxProvider _sfx;
+
         public static Bitmap MakeScreenshot(bool autosave = true, bool copyToClipboard = false)
         {
             IntPtr desktopWindow = GetDesktopWindow();
@@ -30,8 +35,11 @@ namespace DrawAnywhere.Sys
 
             ReleaseDC(desktopWindow, desktopDC);
 
+            _sfx.PlayCamera();
+
             if (autosave)
-                SaveScreenshot(screenShot, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "DrawAnywhere!", $"{DateTime.Now}"));
+                SaveScreenshot(screenShot, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), 
+                    "DrawAnywhere!", $"screenshot_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}-{ new Random().Next() / 1024 }.png"));
 
             if (copyToClipboard)
                 Clipboard.SetImage(screenShot);
@@ -41,7 +49,17 @@ namespace DrawAnywhere.Sys
 
         public static void SaveScreenshot(Bitmap screenShot, string fileName)
         {
-            screenShot.Save(fileName, ImageFormat.Png);
+            if (!Directory.Exists(Path.GetDirectoryName(fileName)))
+                Directory.CreateDirectory(Path.GetDirectoryName(fileName));
+
+            if (File.Exists(fileName))
+            {
+                screenShot.Save(fileName, ImageFormat.Png);
+                return;
+            }
+
+            using var stream = new FileStream(fileName, FileMode.OpenOrCreate);
+            screenShot.Save(stream, ImageFormat.Png);
         }
     }
 }
