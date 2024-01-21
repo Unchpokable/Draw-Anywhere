@@ -22,12 +22,6 @@
                     Command="{Binding HideOverlay}"></KeyBinding>
     </Window.InputBindings>
 
-    <i:Interaction.Triggers>
-        <i:EventTrigger EventName="LostFocus">
-            <i:InvokeCommandAction Command="{Binding HideOverlay}"></i:InvokeCommandAction>
-        </i:EventTrigger>
-    </i:Interaction.Triggers>
-        
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
