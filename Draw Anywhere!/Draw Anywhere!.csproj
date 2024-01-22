@@ -8,10 +8,15 @@
     <UseWPF>true</UseWPF>
     <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
     <Platforms>AnyCPU;x64</Platforms>
+    <ApplicationIcon>Assets\pen.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="SFX\cam.wav" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\pen.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,11 +25,11 @@
     <PackageReference Include="MaterialDesignThemes" Version="4.9.0" />
     <PackageReference Include="Notifications.Wpf" Version="0.1.1" />
     <PackageReference Include="PixiEditor.ColorPicker" Version="3.4.1" />
+    <PackageReference Include="Tomlyn" Version="0.17.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Models\" />
-    <Folder Include="Assets\" />
   </ItemGroup>
 
   <ItemGroup>

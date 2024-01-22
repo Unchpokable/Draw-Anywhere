@@ -22,7 +22,7 @@ namespace DrawAnywhere.ViewModels
             _penColor = new ByRef<Color>(Colors.AliceBlue);
             
             DrawingAttributes = new DrawingAttributes()
-                { Color = _penColor.Value, FitToCurve = true, Height = 15, Width = 15 };
+                { Color = _penColor.Value, FitToCurve = true, Height = 6, Width = 6 };
 
             _colorSelection = new ColorSelectionViewModel(_penColor);
             _penConfig = new PenConfigViewModel(DrawingAttributes);
