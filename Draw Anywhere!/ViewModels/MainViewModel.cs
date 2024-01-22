@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Drawing;
+using System.Linq;
+using System.Windows.Controls;
 using System.Windows.Ink;
-using System.Windows.Input;
 using System.Windows.Media;
 using DrawAnywhere.MvvmCore;
 using DrawAnywhere.Sys;
-using GlobalHotKey;
 using Color = System.Windows.Media.Color;
-using Hardcodet.Wpf.TaskbarNotification;
 
 namespace DrawAnywhere.ViewModels
 {
@@ -17,6 +15,9 @@ namespace DrawAnywhere.ViewModels
         public MainViewModel()
         {
             VisibleControls = new ObservableCollection<ObservableObject>();
+            ChildControls = new ObservableCollection<ObservableObject>();
+
+            ChildControls.CollectionChanged += (s, e) => { OnPropertyChanged(nameof(ChildControls)); };
             VisibleControls.CollectionChanged += (s, e) => { OnPropertyChanged(nameof(VisibleControls)); };
             _penColor = new ByRef<Color>(Colors.AliceBlue);
             
@@ -25,6 +26,8 @@ namespace DrawAnywhere.ViewModels
 
             _colorSelection = new ColorSelectionViewModel(_penColor);
             _penConfig = new PenConfigViewModel(DrawingAttributes);
+            _settings = new SettingsViewModel(this);
+
             _penConfig.PropertyChanged += (s, e) => OnPropertyChanged(nameof(DrawingAttributes));
             
             ShowTool = new RelayCommand(ShowUserTool);
@@ -43,6 +46,8 @@ namespace DrawAnywhere.ViewModels
         public event EventHandler ShowRequested;
         public event EventHandler QuitRequested;
 
+        public StrokeCollection CanvasStrokes { get; set; }
+
         public RelayCommand Quit { get; set; }
         public RelayCommand ShowOverlay { get; set; }
         public RelayCommand HideUi { get; set; }
@@ -52,6 +57,8 @@ namespace DrawAnywhere.ViewModels
         public RelayCommand MakeScreenShot { get; set; }
 
         public ObservableCollection<ObservableObject> VisibleControls { get; set; }
+
+        public ObservableCollection<ObservableObject> ChildControls { get; set; }
 
         public DrawingAttributes DrawingAttributes
         {
@@ -67,51 +74,83 @@ namespace DrawAnywhere.ViewModels
 
         private ColorSelectionViewModel _colorSelection;
         private PenConfigViewModel _penConfig;
+        private SettingsViewModel _settings;
 
         private ByRef<Color> _penColor;
+
+        public void BindCanvasStrokes(StrokeCollection strokes)
+        {
+            CanvasStrokes = strokes;
+            CanvasStrokes.StrokesChanged += OnCanvasStrokesChanged;
+        }
+
+        public void AppendControlChild(ObservableObject ctrl)
+        {
+            if (ctrl == null)
+                return;
+
+            ChildControls.Add(ctrl);
+            VisibleControls.Add(ctrl);
+        }
+
+        public void CloseChild(ObservableObject ctrl)
+        {
+            if (ctrl == null) 
+                return;
+
+            ChildControls.Remove(ctrl); 
+            VisibleControls.Remove(ctrl);
+        }
 
         private void ShowUserTool(object parameter)
         {
             if (parameter is not ModalWindowType toolType)
                 return;
 
+            _settings.CloseAllDialogs(); // Settings is the only control that can create its own child windows
+
+            foreach (var control in ChildControls)
+            {
+                VisibleControls.Remove(control);
+            }
+
+            ObservableObject selectedControl;
+
             switch (toolType)
             {
                 case ModalWindowType.ColorPicker:
-                    if (VisibleControls.Contains(_colorSelection))
-                    {
-                        VisibleControls.Remove(_colorSelection);
-                        return;
-                    }
-
-                    if (VisibleControls.Contains(_penConfig))
-                    {
-                        VisibleControls.Remove(_penConfig);
-                    }
-
-                    VisibleControls.Add(_colorSelection);
+                    selectedControl = _colorSelection;
                     break;
 
                 case ModalWindowType.PenConfig:
-                    if (VisibleControls.Contains(_penConfig))
-                    {
-                        VisibleControls.Remove(_penConfig);
-                        return;
-                    }
+                    selectedControl = _penConfig;
+                    break;
 
-                    if (VisibleControls.Contains(_colorSelection))
-                        VisibleControls.Remove(_colorSelection);
-
-                    VisibleControls.Add(_penConfig);
+                case ModalWindowType.Settings:
+                    selectedControl = _settings;
+                    break;
+                default:
+                    selectedControl = null;
                     break;
             }
+
+            var currentControl = VisibleControls.FirstOrDefault();
+
+            if (selectedControl == null)
+                return;
+
+            VisibleControls.Clear();
+            
+            if (selectedControl != currentControl)
+                VisibleControls.Add(selectedControl);
+
             OnPropertyChanged(nameof(VisibleControls));
         }
 
         private void HideUiComponents(object _)
         {
-            VisibleControls.Remove(_colorSelection);
-            VisibleControls.Remove(_penConfig);
+            VisibleControls.Clear();
+            OnPropertyChanged(nameof(VisibleControls));
         }
 
         private void UpdateDrawingAttributes(object sender, Color e)
@@ -143,6 +182,12 @@ namespace DrawAnywhere.ViewModels
         private void OnQuitRequested(object _)
         {
             QuitRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+
+        private void OnCanvasStrokesChanged(object sender, StrokeCollectionChangedEventArgs e)
+        {
+            HideUiComponents(new());
         }
     }
 }

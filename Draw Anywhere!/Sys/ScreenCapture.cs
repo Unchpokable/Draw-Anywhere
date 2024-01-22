@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 using DrawAnywhere.SFX;
@@ -38,8 +38,9 @@ namespace DrawAnywhere.Sys
             _sfx.PlayCamera();
 
             if (autosave)
-                SaveScreenshot(screenShot, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), 
-                    "DrawAnywhere!", $"screenshot_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}-{ new Random().Next() / 1024 }.png"));
+            {
+                SaveScreenshotWithNotification(screenShot);
+            }
 
             if (copyToClipboard)
                 Clipboard.SetImage(screenShot);
@@ -60,6 +61,27 @@ namespace DrawAnywhere.Sys
 
             using var stream = new FileStream(fileName, FileMode.OpenOrCreate);
             screenShot.Save(stream, ImageFormat.Png);
+        }
+
+        private static void SaveScreenshotWithNotification(Bitmap screenshot)
+        {
+            var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
+                "DrawAnywhere!");
+
+            SaveScreenshot(screenshot, Path.Combine(path, $"screenshot_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}-{new Random().Next() / 1024}.png"));
+
+            ViewModels.Notifications.ShowSuccess("Done!", $"ScreenShot successfully saved at {path}",
+                () =>
+                {
+                    try
+                    {
+                        Process.Start(path);
+                    }
+                    catch (Exception ex)
+                    {
+                        ViewModels.Notifications.ShowError("Screenshot directory opening fail", ex.Message);
+                    }
+                });
         }
     }
 }

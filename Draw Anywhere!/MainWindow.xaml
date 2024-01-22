@@ -78,19 +78,27 @@
                             Command="{Binding MakeScreenShot}"></KeyBinding>
             </InkCanvas.InputBindings>
 
-
-            <i:Interaction.Triggers>
+            <!--<i:Interaction.Triggers>
                 <i:EventTrigger EventName="GotFocus">
                     <i:InvokeCommandAction Command="{Binding HideUi}"></i:InvokeCommandAction>
                 </i:EventTrigger>
-            </i:Interaction.Triggers>
+            </i:Interaction.Triggers>-->
         </InkCanvas>
 
         <ItemsControl Grid.Row="0"
                       ItemsSource="{Binding VisibleControls}"
                       HorizontalAlignment="Left"
                       VerticalAlignment="Bottom"
-                      Margin="10">
+                      Margin="10"
+                      >
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"
+                                VerticalAlignment="Bottom"
+                                HorizontalAlignment="Left">
+                    </StackPanel>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
         </ItemsControl>
 
         <Border Grid.Row="1" Background="#FF404040">
@@ -135,10 +143,12 @@
                 <Button Width="50"
                         Style="{StaticResource MaterialDesignIconButton}"
                         Background="#FF545454"
-                        Command="{Binding ShowSettings}"
-                        Margin="10 0 0 0">
+                        Command="{Binding ShowTool}"
+                        CommandParameter="{x:Static viewModels:ModalWindowType.Settings}"
+                        Margin="10 0 0 0"
+                        x:Name="SettingsButton">
                     <Button.Content>
-                        <materialDesign:PackIcon Kind="Gear"
+                        <materialDesign:PackIcon Kind="Settings"
                                                  Foreground="White"></materialDesign:PackIcon>
                     </Button.Content>
                 </Button>

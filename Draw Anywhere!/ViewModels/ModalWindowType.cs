@@ -3,6 +3,7 @@
     public enum ModalWindowType
     {
         ColorPicker,
-        PenConfig
+        PenConfig,
+        Settings
     }
 }

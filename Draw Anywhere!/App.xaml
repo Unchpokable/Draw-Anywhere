@@ -6,13 +6,27 @@
              xmlns:converters="clr-namespace:DrawAnywhere.MvvmCore.Converters"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
+        <ResourceDictionary>
 
-        <DataTemplate x:Shared="True" DataType="{x:Type vm:ColorSelectionViewModel}">
-            <view:ColorSelection/>
-        </DataTemplate>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Themes/ScrollBar.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
 
-        <DataTemplate x:Shared="True" DataType="{x:Type vm:PenConfigViewModel}">
-            <view:PenConfig/>
-        </DataTemplate>
+            <DataTemplate x:Shared="True" DataType="{x:Type vm:ColorSelectionViewModel}">
+                <view:ColorSelection/>
+            </DataTemplate>
+
+            <DataTemplate x:Shared="True" DataType="{x:Type vm:PenConfigViewModel}">
+                <view:PenConfig/>
+            </DataTemplate>
+
+            <DataTemplate x:Shared="True" DataType="{x:Type vm:SettingsViewModel}">
+                <view:Settings/>
+            </DataTemplate>
+
+            <DataTemplate x:Shared="True" DataType="{x:Type vm:DirectoryBrowserViewModel}">
+                <view:DirectoryBrowser></view:DirectoryBrowser>
+            </DataTemplate>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

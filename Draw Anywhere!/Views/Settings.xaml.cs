@@ -3,11 +3,11 @@
 namespace DrawAnywhere.Views
 {
     /// <summary>
-    /// Логика взаимодействия для PenConfig.xaml
+    /// Логика взаимодействия для Settings.xaml
     /// </summary>
-    public partial class PenConfig : UserControl
+    public partial class Settings : UserControl
     {
-        public PenConfig()
+        public Settings()
         {
             InitializeComponent();
         }

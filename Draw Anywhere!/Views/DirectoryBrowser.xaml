@@ -1,0 +1,154 @@
+﻿<UserControl x:Class="DrawAnywhere.Views.DirectoryBrowser"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:local="clr-namespace:DrawAnywhere.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="470" d:DesignWidth="820"
+             Width="820" Height="470"
+             Margin="10">
+
+<UserControl.Resources>
+    <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml"/>
+</UserControl.Resources>
+    
+    <Border Background="#FF404040">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Заголовок -->
+            <TextBlock Grid.Row="0" Text="Select Directory" Foreground="LightGray" FontFamily="Tahoma" FontSize="16" Margin="10" FontWeight="Bold"/>
+
+            <!-- Панель навигации -->
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10">
+                <Button Margin="0,0,10,0" Width="60"
+                        Style="{StaticResource MaterialDesignFlatDarkBgButton}" Background="#FF5B5B5B" Foreground="#FFD6D6D6"
+                        Command="{Binding WalkPreviousDirectory}">
+                    <Button.Content>
+                        <materialDesign:PackIcon Kind="KeyboardReturn"></materialDesign:PackIcon>
+                    </Button.Content>
+                </Button>
+                <TextBlock FontFamily="Tahoma" 
+                           FontWeight="Bold" 
+                           Height="30"
+                           FontSize="18"
+                           Foreground="#FFC3C3C3"
+                           Text="{Binding CurrentRoot}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            </StackPanel>
+
+            <!-- ListView для отображения папок -->
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Center"
+                            Margin="10">
+                    <Button Style="{StaticResource MaterialDesignFlatDarkBgButton}" Background="#FF5B5B5B" Foreground="#FFD6D6D6"
+                            Width="60" Height="50"
+                            Margin="0 0 0 13"
+                            Command="{Binding WalkDirectory}"
+                            CommandParameter="{Binding BindingUserProfilePath}">
+                        <Button.Content>
+                            <materialDesign:PackIcon Width="30" Height="30" Kind="User"></materialDesign:PackIcon>
+                        </Button.Content>
+                    </Button>
+
+                    <Button Style="{StaticResource MaterialDesignFlatDarkBgButton}" Background="#FF5B5B5B" Foreground="#FFD6D6D6"
+                            Width="60" Height="50"
+                            Margin="0 0 0 13"
+                            Command="{Binding WalkDirectory}"
+                            CommandParameter="{Binding BindingMyPicturesPath}">
+                        <Button.Content>
+                            <materialDesign:PackIcon Width="30" Height="30" Kind="Image"></materialDesign:PackIcon>
+                        </Button.Content>
+                    </Button>
+
+                    <Button Style="{StaticResource MaterialDesignFlatDarkBgButton}" Background="#FF5B5B5B" Foreground="#FFD6D6D6"
+                            Width="60" Height="50"
+                            Margin="0 0 0 12"
+                            Command="{Binding WalkDirectory}"
+                            CommandParameter="{Binding BindingMyDocumentsPath}">
+                        <Button.Content>
+                            <materialDesign:PackIcon Width="30" Height="30" Kind="DocumentSign"></materialDesign:PackIcon>
+                        </Button.Content>
+                    </Button>
+
+                    <Button Style="{StaticResource MaterialDesignFlatDarkBgButton}" Background="#FF5B5B5B" Foreground="#FFD6D6D6"
+                            Width="60" Height="50"
+                            Command="{Binding WalkDirectory}"
+                            CommandParameter="{Binding BindingMyComputerPath}">
+                        <Button.Content>
+                            <materialDesign:PackIcon Width="30" Height="30" Kind="Computer"></materialDesign:PackIcon>
+                        </Button.Content>
+                    </Button>
+
+                </StackPanel>
+
+                <ListView Margin="10" Grid.Column="1"
+                          BorderThickness="0"
+                          Background="#FF373737"
+                          ItemsSource="{Binding CurrentDirectories}"
+                          x:Name="BrowserView">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Border Height="50">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Folder" Margin="5" Foreground="Wheat" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Name}" VerticalAlignment="Center" Foreground="LightGray" FontFamily="Tahoma" FontSize="16" Margin="10" FontWeight="Bold"/>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding SelectDirectory}"
+                                                   CommandParameter="{Binding}"></i:InvokeCommandAction>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseDoubleClick">
+                            <i:InvokeCommandAction Command="{Binding WalkDirectory}"
+                                                   CommandParameter="{Binding SelectedDirectory}"></i:InvokeCommandAction>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ListView>
+            </Grid>            
+
+            <!-- TextBox для отображения выбранного пути -->
+            <TextBox Grid.Row="3" IsReadOnly="True" Margin="10"
+                     FontFamily="Tahoma" 
+                     FontWeight="Bold" 
+                     Height="30"
+                     FontSize="18"
+                     Foreground="#FFC3C3C3" Background="#FF5F5F5F"
+                     Text="{Binding SelectedDirectory.FullPath, Mode=OneWay}">
+                <TextBox.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="3"/>
+                    </Style>
+                </TextBox.Resources>
+            </TextBox>
+
+            <!-- Кнопки Accept и Cancel -->
+            <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+                <Button Content="Accept" Margin="0,0,10,0" Style="{StaticResource MaterialDesignFlatDarkBgButton}" Background="#FF5B5B5B" Foreground="#FFD6D6D6"
+                        Command="{Binding Accept}"
+                        FontWeight="Bold"/>
+                <Button Content="Cancel" Style="{StaticResource MaterialDesignFlatDarkBgButton}" Background="#FF5B5B5B" Foreground="#FFD6D6D6"
+                        Command="{Binding Close}"
+                        FontWeight="Bold"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>

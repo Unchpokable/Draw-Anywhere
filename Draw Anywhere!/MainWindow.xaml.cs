@@ -35,7 +35,12 @@ namespace DrawAnywhere
             ((MainViewModel)DataContext).ShowRequested += (s, e) => ShowOverlay();
             ((MainViewModel)DataContext).QuitRequested += (s, e) => Application.Current.Shutdown();
 
+            ((MainViewModel)DataContext).BindCanvasStrokes(DrawField.Strokes);
+
             DrawAnywhereTrayIcon.Icon = Properties.Resources.pen;
+#if !DEBUG
+            SettingsButton.Visibility = Visibility.Hidden;
+#endif
         }
 
         ~MainWindow()
