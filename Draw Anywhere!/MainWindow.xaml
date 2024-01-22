@@ -10,7 +10,7 @@
         xmlns:tray="clr-namespace:Hardcodet.Wpf.TaskbarNotification;assembly=Hardcodet.NotifyIcon.Wpf"
         mc:Ignorable="d"
         xmlns:tb="http://www.hardcodet.net/taskbar" 
-        Title="MainWindow" Height="450" Width="800"
+        Title="DACanvas" Height="450" Width="800"
         AllowsTransparency="True"
         Background="Transparent"
         WindowStyle="None">
@@ -30,10 +30,10 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml"/>
 
             </ResourceDictionary.MergedDictionaries>
-                <ContextMenu x:Key="TrayMenu">
-                    <MenuItem Header="Show" Command="{Binding ShowOverlay}" />
-                    <MenuItem Header="Quit" Command="{Binding Quit}" />
-                </ContextMenu>
+            <ContextMenu x:Key="TrayMenu">
+                <MenuItem Header="Show" Command="{Binding ShowOverlay}" />
+                <MenuItem Header="Quit" Command="{Binding Quit}" />
+            </ContextMenu>
         </ResourceDictionary>
     </Window.Resources>
 

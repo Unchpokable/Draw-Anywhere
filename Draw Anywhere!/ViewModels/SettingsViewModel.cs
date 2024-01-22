@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Documents;
 using DrawAnywhere.MvvmCore;
+using DrawAnywhere.Sys;
 
 namespace DrawAnywhere.ViewModels
 {
@@ -15,6 +15,17 @@ namespace DrawAnywhere.ViewModels
             OpenDirectorySelectionDialog = new RelayCommand(OpenDirectoryDialog);
         }
 
+        public bool AutoRunEnabled
+        {
+            get => _autoRunEnabled;
+            set
+            {
+                _autoRunEnabled = value; 
+                OnPropertyChanged();
+                ToggleAutoRun();
+            }
+        }
+
         public RelayCommand OpenDirectorySelectionDialog { get; set; }
 
         private readonly MainViewModel _host;
@@ -22,6 +33,7 @@ namespace DrawAnywhere.ViewModels
         private List<ObservableObject> _childControls;
 
         private bool _dialogOpened = false;
+        private bool _autoRunEnabled = false;
 
         public void CloseAllDialogs()
         {
@@ -55,6 +67,14 @@ namespace DrawAnywhere.ViewModels
             }
 
             CloseAllDialogs();
+        }
+
+        private void ToggleAutoRun()
+        {
+            if (_autoRunEnabled)
+                WindowsShell.AddStartup();
+            else 
+                WindowsShell.RemoveStartup();
         }
     }
 }

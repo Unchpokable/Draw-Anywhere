@@ -58,7 +58,8 @@
                             Width="60" Height="50"
                             Margin="0 0 0 13"
                             Command="{Binding WalkDirectory}"
-                            CommandParameter="{Binding BindingUserProfilePath}">
+                            CommandParameter="{Binding BindingUserProfilePath}"
+                            ToolTip="Go to User's directory">
                         <Button.Content>
                             <materialDesign:PackIcon Width="30" Height="30" Kind="User"></materialDesign:PackIcon>
                         </Button.Content>
@@ -68,7 +69,8 @@
                             Width="60" Height="50"
                             Margin="0 0 0 13"
                             Command="{Binding WalkDirectory}"
-                            CommandParameter="{Binding BindingMyPicturesPath}">
+                            CommandParameter="{Binding BindingMyPicturesPath}"
+                            ToolTip="Go to My Pictures directory">
                         <Button.Content>
                             <materialDesign:PackIcon Width="30" Height="30" Kind="Image"></materialDesign:PackIcon>
                         </Button.Content>
@@ -78,7 +80,8 @@
                             Width="60" Height="50"
                             Margin="0 0 0 12"
                             Command="{Binding WalkDirectory}"
-                            CommandParameter="{Binding BindingMyDocumentsPath}">
+                            CommandParameter="{Binding BindingMyDocumentsPath}"
+                            ToolTip="Go to My Documents directory">
                         <Button.Content>
                             <materialDesign:PackIcon Width="30" Height="30" Kind="DocumentSign"></materialDesign:PackIcon>
                         </Button.Content>
@@ -87,7 +90,8 @@
                     <Button Style="{StaticResource MaterialDesignFlatDarkBgButton}" Background="#FF5B5B5B" Foreground="#FFD6D6D6"
                             Width="60" Height="50"
                             Command="{Binding WalkDirectory}"
-                            CommandParameter="{Binding BindingMyComputerPath}">
+                            CommandParameter="{Binding BindingMyComputerPath}"
+                            ToolTip="Go to Desktop directory">
                         <Button.Content>
                             <materialDesign:PackIcon Width="30" Height="30" Kind="Computer"></materialDesign:PackIcon>
                         </Button.Content>
