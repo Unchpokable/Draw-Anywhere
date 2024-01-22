@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using DrawAnywhere.Models;
 using DrawAnywhere.SFX;
@@ -20,22 +21,36 @@ namespace DrawAnywhere.Sys
 
         private static SfxProvider _sfx;
         private static AppConfig _config;
+
         public static Bitmap MakeScreenshot(bool autosave = true, bool copyToClipboard = false)
         {
-            IntPtr desktopWindow = GetDesktopWindow();
-            IntPtr desktopDC = GetWindowDC(desktopWindow);
-            Point cursorPosition = Cursor.Position;
-            Rectangle screenBounds = Screen.FromPoint(cursorPosition).Bounds;
+            if (!GetCursorPos(out POINT cursorPosition))
+            {
+                return null;
+            }
+            IntPtr monitorHandle = MonitorFromPoint(cursorPosition, 2);
+
+            var mi = new MONITORINFO();
+            mi.cbSize = Marshal.SizeOf(typeof(MONITORINFO));
+
+            if (!GetMonitorInfo(monitorHandle, ref mi))
+                return null;
+
+            var monitorRect = mi.rcMonitor;
+
+            var screenBounds = new Rectangle(new Point(monitorRect.left, monitorRect.top),
+            new Size()
+            {
+                Width = monitorRect.right - monitorRect.left,
+                Height = monitorRect.bottom - monitorRect.top
+            });
+
 
             Bitmap screenShot = new Bitmap(screenBounds.Width, screenBounds.Height);
             using (Graphics g = Graphics.FromImage(screenShot))
             {
-                IntPtr hDestDC = g.GetHdc();
-                BitBlt(hDestDC, 0, 0, screenBounds.Width, screenBounds.Height, desktopDC, 0, 0, CopyPixelOperation.SourceCopy);
-                g.ReleaseHdc(hDestDC);
+                g.CopyFromScreen(screenBounds.Location, Point.Empty, screenBounds.Size);
             }
-
-            ReleaseDC(desktopWindow, desktopDC);
 
             _sfx.PlayCamera();
 
@@ -63,6 +78,8 @@ namespace DrawAnywhere.Sys
 
             using var stream = new FileStream(fileName, FileMode.OpenOrCreate);
             screenShot.Save(stream, ImageFormat.Png);
+
+            screenShot.Dispose();
         }
 
         private static void SaveScreenshotWithNotification(Bitmap screenshot)
