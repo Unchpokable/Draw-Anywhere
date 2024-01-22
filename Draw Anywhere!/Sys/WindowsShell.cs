@@ -12,13 +12,6 @@ namespace DrawAnywhere.Sys
         private static string _startupShortcutPath =
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), "DrawAnywhere.lnk");
 
-        public static void CreateShortcut(string targetFile, string shortcutDirectory, string shortcutName)
-        {
-            string shortcutLocation = Path.Combine(shortcutDirectory, shortcutName + ".lnk");
-
-            CreateShortcut(targetFile, shortcutLocation);
-        }
-
         public static void CreateShortcut(string targetFile, string shortcutLocation)
         {
             var shell = new WshShellClass();
