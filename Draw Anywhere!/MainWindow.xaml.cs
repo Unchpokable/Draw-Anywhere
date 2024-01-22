@@ -15,7 +15,6 @@ namespace DrawAnywhere
     /// </summary>
     public partial class MainWindow : Window
     {
-
         public MainWindow()
         {
             _applicationHotKeyManager = new HotKeyManager();
@@ -39,7 +38,6 @@ namespace DrawAnywhere
 
             DrawAnywhereTrayIcon.Icon = Properties.Resources.pen;
 #if !DEBUG
-            SettingsButton.Visibility = Visibility.Hidden;
             Hide();
 #endif
         }
