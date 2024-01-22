@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Forms;
+using DrawAnywhere.Models;
 using DrawAnywhere.SFX;
 using static DrawAnywhere.Sys.WinApi;
 
@@ -13,11 +14,12 @@ namespace DrawAnywhere.Sys
     {
         static ScreenCapture()
         {
+            _config = AppConfig.Instance();
             _sfx = new SfxProvider();
         }
 
         private static SfxProvider _sfx;
-
+        private static AppConfig _config;
         public static Bitmap MakeScreenshot(bool autosave = true, bool copyToClipboard = false)
         {
             IntPtr desktopWindow = GetDesktopWindow();
@@ -65,8 +67,7 @@ namespace DrawAnywhere.Sys
 
         private static void SaveScreenshotWithNotification(Bitmap screenshot)
         {
-            var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
-                "DrawAnywhere!");
+            var path = _config.ScreenShotPath;
 
             SaveScreenshot(screenshot, Path.Combine(path, $"screenshot_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}-{new Random().Next() / 1024}.png"));
 

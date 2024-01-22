@@ -50,7 +50,8 @@
                              Height="40"
                              FontSize="16"
                              Foreground="#FFC3C3C3" Background="#FF5F5F5F"
-                             VerticalContentAlignment="Center">
+                             VerticalContentAlignment="Center"
+                             Text="{Binding ScreenShotsDirectory}">
                         <TextBox.Resources>
                             <Style TargetType="{x:Type Border}">
                                 <Setter Property="CornerRadius" Value="3"/>

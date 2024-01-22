@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Ink;
 using System.Windows.Media;
+using DrawAnywhere.Models;
 using DrawAnywhere.MvvmCore;
 using DrawAnywhere.Sys;
 using Color = System.Windows.Media.Color;
@@ -14,6 +15,8 @@ namespace DrawAnywhere.ViewModels
     {
         public MainViewModel()
         {
+            _config = AppConfig.GetDefaultConfig();
+
             VisibleControls = new ObservableCollection<ObservableObject>();
             ChildControls = new ObservableCollection<ObservableObject>();
 
@@ -77,6 +80,8 @@ namespace DrawAnywhere.ViewModels
         private SettingsViewModel _settings;
 
         private ByRef<Color> _penColor;
+
+        private AppConfig _config;
 
         public void BindCanvasStrokes(StrokeCollection strokes)
         {

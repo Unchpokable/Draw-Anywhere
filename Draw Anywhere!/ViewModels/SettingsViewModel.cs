@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using DrawAnywhere.Models;
 using DrawAnywhere.MvvmCore;
 using DrawAnywhere.Sys;
 
@@ -9,23 +11,39 @@ namespace DrawAnywhere.ViewModels
     {
         public SettingsViewModel(MainViewModel host)
         {
+            _config = AppConfig.Instance(); // This instance should be loaded by MainViewModel
+
             _host = host;
             _childControls = new List<ObservableObject>();
 
+            AutoRunEnabled = _config.WindowsStartupEnabled;
+
+            ApplyAndClose = new RelayCommand(ApplyChanges);
             OpenDirectorySelectionDialog = new RelayCommand(OpenDirectoryDialog);
+        }
+
+        public string ScreenShotsDirectory
+        {
+            get => _config.ScreenShotPath;
+            set
+            {
+                _config.ScreenShotPath = value;
+                OnPropertyChanged();
+            }
         }
 
         public bool AutoRunEnabled
         {
-            get => _autoRunEnabled;
+            get => _config.WindowsStartupEnabled;
             set
             {
-                _autoRunEnabled = value; 
+                _config.WindowsStartupEnabled = value; 
                 OnPropertyChanged();
                 ToggleAutoRun();
             }
         }
 
+        public RelayCommand ApplyAndClose { get; set; }
         public RelayCommand OpenDirectorySelectionDialog { get; set; }
 
         private readonly MainViewModel _host;
@@ -33,7 +51,8 @@ namespace DrawAnywhere.ViewModels
         private List<ObservableObject> _childControls;
 
         private bool _dialogOpened = false;
-        private bool _autoRunEnabled = false;
+
+        private AppConfig _config;
 
         public void CloseAllDialogs()
         {
@@ -63,7 +82,7 @@ namespace DrawAnywhere.ViewModels
             _dialogOpened = false;
             if (e != null)
             {
-
+                ScreenShotsDirectory = e.FullPath;
             }
 
             CloseAllDialogs();
@@ -71,10 +90,16 @@ namespace DrawAnywhere.ViewModels
 
         private void ToggleAutoRun()
         {
-            if (_autoRunEnabled)
+            if (_config.WindowsStartupEnabled)
                 WindowsShell.AddStartup();
             else 
                 WindowsShell.RemoveStartup();
+        }
+
+        private async void ApplyChanges(object _)
+        { 
+            await _config.SaveAsync();
+            Notifications.ShowSuccess("Done!", "Settings saved!");
         }
     }
 }

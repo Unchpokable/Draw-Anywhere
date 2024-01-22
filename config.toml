@@ -1,0 +1,7 @@
+[shell]
+screenshot_path = "C:\\Users\\Unchp\\OneDrive\\Изображения\\DrawAnywhere!"
+startup_enabled = false
+[pen]
+stroke_width = 6
+stroke_height = 6
+highlighter_mode = false
