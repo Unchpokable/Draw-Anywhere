@@ -40,6 +40,7 @@ namespace DrawAnywhere
             DrawAnywhereTrayIcon.Icon = Properties.Resources.pen;
 #if !DEBUG
             SettingsButton.Visibility = Visibility.Hidden;
+            Hide();
 #endif
         }
 
