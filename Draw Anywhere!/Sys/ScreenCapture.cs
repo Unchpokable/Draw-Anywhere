@@ -45,7 +45,6 @@ namespace DrawAnywhere.Sys
                 Height = monitorRect.bottom - monitorRect.top
             });
 
-
             Bitmap screenShot = new Bitmap(screenBounds.Width, screenBounds.Height);
             using (Graphics g = Graphics.FromImage(screenShot))
             {
