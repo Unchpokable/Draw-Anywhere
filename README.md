@@ -19,3 +19,6 @@ Yes! It is listed below:
 - P - open pen config ("Pen" icon on toolbar)
 - Alt+S - screenshot ("Camera" icon on toolbar)
 - Settings can be opened only by clicking its icon
+
+# Known issues
+- If you're using Windows scaling with low resolution monitors, be ready for Ui will break
