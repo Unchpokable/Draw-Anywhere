@@ -85,14 +85,14 @@ namespace DrawAnywhere.Sys
         {
             var path = _config.ScreenShotPath;
 
-            SaveScreenshot(screenshot, Path.Combine(path, $"screenshot_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}-{new Random().Next() / 1024}.png"));
+            SaveScreenshot(screenshot, Path.Combine(path, $"screenshot_{DateTime.Now:yyyyMMdd_HHmmss}-{new Random().Next() / 1024}.png"));
 
             ViewModels.Notifications.ShowSuccess("Done!", $"ScreenShot successfully saved at {path}",
                 () =>
                 {
                     try
                     {
-                        Process.Start(path);
+                        Process.Start("explorer.exe", path);
                     }
                     catch (Exception ex)
                     {
