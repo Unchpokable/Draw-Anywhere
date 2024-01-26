@@ -46,9 +46,21 @@ namespace DrawAnywhere.ViewModels
             }
 		}
 
+        public bool IgnorePressure
+        {
+            get => _ignorePressure;
+            set
+            {
+                _ignorePressure = value;
+                _boundAttributes.IgnorePressure = value;
+                OnPropertyChanged();
+            }
+        }
+
         private readonly DrawingAttributes _boundAttributes;
         private double _strokeHeight;
         private double _strokeWidth;
         private bool _isHighlighter;
-	}
+        private bool _ignorePressure;
+    }
 }
