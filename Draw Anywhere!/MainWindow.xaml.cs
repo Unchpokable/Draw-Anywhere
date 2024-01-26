@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Ink;
 using System.Windows.Input;
+using DrawAnywhere.Models;
 using DrawAnywhere.Sys;
 using DrawAnywhere.ViewModels;
 using GlobalHotKey;
@@ -19,6 +20,7 @@ namespace DrawAnywhere
         {
             _applicationHotKeyManager = new HotKeyManager();
             InitializeComponent();
+            _config = AppConfig.Instance();
             _lastActions = new Stack<StrokeCollection>();
 
             Deactivated += OnFocusLost;
@@ -32,8 +34,9 @@ namespace DrawAnywhere
             ((MainViewModel)DataContext).UndoRequested += (s, e) => UndoStrokes();
             ((MainViewModel)DataContext).HideRequested += (s, e) => HideOverlay();
             ((MainViewModel)DataContext).ShowRequested += (s, e) => ShowOverlay();
+            ((MainViewModel)DataContext).CleanupRequested += (s, e) => ClearStrokes();
             ((MainViewModel)DataContext).QuitRequested += (s, e) => Application.Current.Shutdown();
-
+            
             ((MainViewModel)DataContext).BindCanvasStrokes(DrawField.Strokes);
 
             DrawAnywhereTrayIcon.Icon = Properties.Resources.pen;
@@ -55,6 +58,8 @@ namespace DrawAnywhere
 
         private bool _handleDrawAction = true;
 
+        private AppConfig _config;
+
         private void RegisterDefaultHotKeys()
         {
 
@@ -74,16 +79,18 @@ namespace DrawAnywhere
 
         private void HideOverlay()
         {
-            _lastActions.Clear();
-            DrawField.Strokes.Clear();
+            if (_config.CleanCanvasWhenHide)
+            {
+                _lastActions.Clear();
+                DrawField.Strokes.Clear();
+            }
+
             Hide();
         }
 
         private void OnFocusLost(object sender, EventArgs e)
         {
-            _lastActions.Clear();
-            DrawField.Strokes.Clear();
-            Hide();
+            HideOverlay();
         }
 
         private void ShowOverlay()
@@ -129,6 +136,12 @@ namespace DrawAnywhere
                     Topmost = true;
                 }
             }
+        }
+
+        private void ClearStrokes()
+        {
+            DrawField.Strokes.Clear();
+            _lastActions.Clear();
         }
 
         protected override void OnGotFocus(RoutedEventArgs e)

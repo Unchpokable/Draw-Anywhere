@@ -28,15 +28,15 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml"/>
-
             </ResourceDictionary.MergedDictionaries>
+
             <ContextMenu x:Key="TrayMenu">
                 <MenuItem Header="Show" Command="{Binding ShowOverlay}" />
                 <MenuItem Header="Quit" Command="{Binding Quit}" />
             </ContextMenu>
+
         </ResourceDictionary>
     </Window.Resources>
-
 
     <Grid x:Name="RootGrid">
         <Grid.RowDefinitions>
@@ -49,15 +49,14 @@
                                     Visibility="Visible"
                                     ToolTipText="Draw Anywhere!"
                                     ContextMenu="{StaticResource TrayMenu}">
-            
-            
         </tray:TaskbarIcon>
 
         <InkCanvas Grid.Row="0"
-            Background="#19373737"
+                    Background="#19373737"
                        Grid.RowSpan="2"
                        MoveEnabled="True"
                        x:Name="DrawField"
+            
                    DefaultDrawingAttributes="{Binding DrawingAttributes}">
             <InkCanvas.InputBindings>
                 <KeyBinding Key="Z" Modifiers="Control"
@@ -77,20 +76,13 @@
                 <KeyBinding Key="S" Modifiers="Alt"
                             Command="{Binding MakeScreenShot}"></KeyBinding>
             </InkCanvas.InputBindings>
-
-            <!--<i:Interaction.Triggers>
-                <i:EventTrigger EventName="GotFocus">
-                    <i:InvokeCommandAction Command="{Binding HideUi}"></i:InvokeCommandAction>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>-->
         </InkCanvas>
 
         <ItemsControl Grid.Row="0"
                       ItemsSource="{Binding VisibleControls}"
                       HorizontalAlignment="Left"
                       VerticalAlignment="Bottom"
-                      Margin="10"
-                      >
+                      Margin="10">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Horizontal"
@@ -110,7 +102,22 @@
                 <Button Width="50"
                         Style="{StaticResource MaterialDesignIconButton}"
                         Background="#FF545454"
-                        Command="{Binding ShowTool}" CommandParameter="{x:Static viewModels:ModalWindowType.ColorPicker}">
+                        Command="{Binding ClearCanvas}"
+                        ToolTip="Clear whole canvas">
+                    <Button.Content>
+                        <materialDesign:PackIcon Kind="Broom"
+                                                 Foreground="White"></materialDesign:PackIcon>
+                    </Button.Content>
+
+                </Button>
+
+                <Button Width="50"
+                        Style="{StaticResource MaterialDesignIconButton}"
+                        Background="#FF545454"
+                        Margin="10 0 0 0"
+                        Command="{Binding ShowTool}" 
+                        CommandParameter="{x:Static viewModels:ModalWindowType.ColorPicker}"
+                        ToolTip="Customize brush color">
                     <Button.Content>
                         <materialDesign:PackIcon Kind="Palette"
                                              Foreground="White"></materialDesign:PackIcon>
@@ -122,7 +129,8 @@
                         Style="{StaticResource MaterialDesignIconButton}"
                         Background="#FF545454"
                         Command="{Binding ShowTool}" CommandParameter="{x:Static viewModels:ModalWindowType.PenConfig}"
-                        Margin="10 0 0 0">
+                        Margin="10 0 0 0"
+                        ToolTip="Customize brush geometry">
                     <Button.Content>
                         <materialDesign:PackIcon Kind="Pen"
                                                  Foreground="White"></materialDesign:PackIcon>
@@ -133,7 +141,8 @@
                         Style="{StaticResource MaterialDesignIconButton}"
                         Background="#FF545454"
                         Command="{Binding MakeScreenShot}"
-                        Margin="10 0 0 0">
+                        Margin="10 0 0 0"
+                        ToolTip="Make a screenshot">
                     <Button.Content>
                         <materialDesign:PackIcon Kind="Camera"
                                                  Foreground="White"></materialDesign:PackIcon>
@@ -146,7 +155,8 @@
                         Command="{Binding ShowTool}"
                         CommandParameter="{x:Static viewModels:ModalWindowType.Settings}"
                         Margin="10 0 0 0"
-                        x:Name="SettingsButton">
+                        x:Name="SettingsButton"
+                        ToolTip="Open program settings">
                     <Button.Content>
                         <materialDesign:PackIcon Kind="Settings"
                                                  Foreground="White"></materialDesign:PackIcon>

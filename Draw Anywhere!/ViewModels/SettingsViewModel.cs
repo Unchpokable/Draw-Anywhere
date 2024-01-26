@@ -43,6 +43,16 @@ namespace DrawAnywhere.ViewModels
             }
         }
 
+        public bool CleanCanvasOnHide
+        {
+            get => _config.CleanCanvasWhenHide;
+            set
+            {
+                _config.CleanCanvasWhenHide = value;
+                OnPropertyChanged();
+            }
+        }
+
         public RelayCommand ApplyAndClose { get; set; }
         public RelayCommand OpenDirectorySelectionDialog { get; set; }
 

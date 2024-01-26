@@ -15,7 +15,7 @@ namespace DrawAnywhere.ViewModels
     {
         public MainViewModel()
         {
-            _config = AppConfig.GetDefaultConfig();
+            _config = AppConfig.Instance();
 
             VisibleControls = new ObservableCollection<ObservableObject>();
             ChildControls = new ObservableCollection<ObservableObject>();
@@ -40,6 +40,7 @@ namespace DrawAnywhere.ViewModels
             HideUi = new RelayCommand(HideUiComponents);
             ShowOverlay = new RelayCommand(OnOverlayCalled);
             Quit = new RelayCommand(OnQuitRequested);
+            ClearCanvas = new RelayCommand(OnClearRequested);
 
             _penColor.ValueChanged += UpdateDrawingAttributes;
         }
@@ -48,6 +49,7 @@ namespace DrawAnywhere.ViewModels
         public event EventHandler HideRequested;
         public event EventHandler ShowRequested;
         public event EventHandler QuitRequested;
+        public event EventHandler CleanupRequested;
 
         public StrokeCollection CanvasStrokes { get; set; }
 
@@ -56,6 +58,7 @@ namespace DrawAnywhere.ViewModels
         public RelayCommand HideUi { get; set; }
         public RelayCommand HideOverlay { get; set; }
         public RelayCommand CallUndo { get; set; }
+        public RelayCommand ClearCanvas { get; set; }
         public RelayCommand ShowTool { get; set; }
         public RelayCommand MakeScreenShot { get; set; }
 
@@ -189,6 +192,10 @@ namespace DrawAnywhere.ViewModels
             QuitRequested?.Invoke(this, EventArgs.Empty);
         }
 
+        private void OnClearRequested(object _)
+        {
+            CleanupRequested?.Invoke(this, EventArgs.Empty);
+        }
 
         private void OnCanvasStrokesChanged(object sender, StrokeCollectionChangedEventArgs e)
         {
