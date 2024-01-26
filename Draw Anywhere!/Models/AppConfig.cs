@@ -10,15 +10,17 @@ namespace DrawAnywhere.Models
     {
         public string ScreenShotPath { get; set; }
         public bool WindowsStartupEnabled { get; set; }
+        public bool CleanCanvasWhenHide { get; set; }
 
         public int PenStrokeHeight { get; set; } = 6;
         public int PenStrokeWidth { get; set; } = 6;
         public bool HighlighterMode { get; set; } = false;
+        public bool IgnoreStylusPressure { get; set; } = false;
 
         public static AppConfig Instance()
         {
             if (_instance == null)
-                _instance = new AppConfig();
+                _instance = GetDefaultConfig();
             return _instance;
         }
 
@@ -39,13 +41,15 @@ namespace DrawAnywhere.Models
                 ["shell"] = new TomlTable
                 {
                     ["screenshot_path"] = path,
+                    ["on_hide_cleanup"] = true,
                     ["startup_enabled"] = false
                 },
                 ["pen"] = new TomlTable
                 {
                     ["stroke_width"] = 6,
                     ["stroke_height"] = 6,
-                    ["highlighter_mode"] = false
+                    ["highlighter_mode"] = false,
+                    ["ignore_stylus_pressure"] = false
                 }
             };
 
@@ -78,6 +82,7 @@ namespace DrawAnywhere.Models
                 {
                     config.ScreenShotPath = shellTable["screenshot_path"]?.ToString();
                     config.WindowsStartupEnabled = bool.Parse(shellTable["startup_enabled"].ToString() ?? "false");
+                    config.CleanCanvasWhenHide = bool.Parse(shellTable["on_hide_cleanup"].ToString() ?? "true");
                 }
 
                 if (table.ContainsKey("pen") && table["pen"] is TomlTable penTable)
@@ -85,6 +90,7 @@ namespace DrawAnywhere.Models
                     config.PenStrokeHeight = int.Parse(penTable["stroke_height"].ToString() ?? "6");
                     config.PenStrokeWidth = int.Parse(penTable["stroke_width"].ToString() ?? "6");
                     config.HighlighterMode = bool.Parse(penTable["highlighter_mode"].ToString() ?? "false");
+                    config.IgnoreStylusPressure = bool.Parse(penTable["ignore_stylus_pressure"].ToString() ?? "false");
                 }
             }
 
@@ -99,18 +105,25 @@ namespace DrawAnywhere.Models
                 ["shell"] = new TomlTable
                 {
                     ["screenshot_path"] = ScreenShotPath,
-                    ["startup_enabled"] = WindowsStartupEnabled
+                    ["startup_enabled"] = WindowsStartupEnabled,
+                    ["on_hide_cleanup"] = CleanCanvasWhenHide,
                 },
                 ["pen"] = new TomlTable
                 {
                     ["stroke_width"] = PenStrokeWidth,
                     ["stroke_height"] = PenStrokeHeight,
-                    ["highlighter_mode"] = HighlighterMode
+                    ["highlighter_mode"] = HighlighterMode,
+                    ["ignore_stylus_pressure"] = IgnoreStylusPressure
                 }
             };
 
             var tomlContent = Toml.FromModel(tomlDocument);
             await File.WriteAllTextAsync("config.toml", tomlContent);
+        }
+
+        public async void Save()
+        {
+            await SaveAsync();
         }
     }
 }

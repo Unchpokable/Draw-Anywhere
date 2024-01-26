@@ -26,7 +26,7 @@
             </Grid.RowDefinitions>
         
             <StackPanel Margin="10">
-                <Grid Height="80">
+                <Grid Height="60">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="200"/>
                         <ColumnDefinition/>
@@ -69,7 +69,7 @@
                     </Button>
                 </Grid>
 
-                <Grid Height="80">
+                <Grid Height="60">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="200"/>
                         <ColumnDefinition/>
@@ -91,6 +91,31 @@
                               Style="{StaticResource MaterialDesignFilterChipOutlineCheckBox}"
                               Foreground="#FFC3C3C3"
                               IsChecked="{Binding AutoRunEnabled}">
+                    </CheckBox>
+                </Grid>
+
+                <Grid Height="60">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Column="0" 
+                           FontFamily="Tahoma" 
+                           FontWeight="Bold" 
+                           VerticalAlignment="Center"
+                           Foreground="#FFC3C3C3"
+                           FontSize="16"
+                           Margin="5 0 5 0">
+                        Clear canvas on hide:
+                    </Label>
+
+                    <CheckBox Grid.Column="1"
+                              VerticalAlignment="Center"
+                              Margin="5"
+                              Style="{StaticResource MaterialDesignFilterChipOutlineCheckBox}"
+                              Foreground="#FFC3C3C3"
+                              IsChecked="{Binding CleanCanvasOnHide}">
                     </CheckBox>
                 </Grid>
             </StackPanel>
