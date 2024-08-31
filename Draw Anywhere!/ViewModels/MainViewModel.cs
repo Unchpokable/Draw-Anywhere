@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Controls;
 using System.Windows.Ink;
 using System.Windows.Media;
 using DrawAnywhere.Models;
 using DrawAnywhere.MvvmCore;
 using DrawAnywhere.Sys;
+using DrawAnywhere.ViewModels.Helpers;
 using Color = System.Windows.Media.Color;
 
 namespace DrawAnywhere.ViewModels
@@ -17,32 +17,17 @@ namespace DrawAnywhere.ViewModels
         {
             _config = AppConfig.Instance();
 
-            VisibleControls = new ObservableCollection<ObservableObject>();
-            ChildControls = new ObservableCollection<ObservableObject>();
-
-            ChildControls.CollectionChanged += (s, e) => { OnPropertyChanged(nameof(ChildControls)); };
-            VisibleControls.CollectionChanged += (s, e) => { OnPropertyChanged(nameof(VisibleControls)); };
             _penColor = new ByRef<Color>(Colors.AliceBlue);
-            
-            DrawingAttributes = new DrawingAttributes()
+            _penColor.ValueChanged += UpdateDrawingAttributes;
+
+            DrawingAttributes = new DrawingAttributes
                 { Color = _penColor.Value, FitToCurve = true, Height = 6, Width = 6 };
 
-            _colorSelection = new ColorSelectionViewModel(_penColor);
-            _penConfig = new PenConfigViewModel(DrawingAttributes);
-            _settings = new SettingsViewModel(this);
+            InitializeUiComponentsCollections();
+            InitializeViewModels();
+            InitializeCommands();
 
-            _penConfig.PropertyChanged += (s, e) => OnPropertyChanged(nameof(DrawingAttributes));
-            
-            ShowTool = new RelayCommand(ShowUserTool);
-            MakeScreenShot = new RelayCommand(CaptureScreenshot);
-            CallUndo = new RelayCommand(OnUndoCalled);
-            HideOverlay = new RelayCommand(OnHideCalled);
-            HideUi = new RelayCommand(HideUiComponents);
-            ShowOverlay = new RelayCommand(OnOverlayCalled);
-            Quit = new RelayCommand(OnQuitRequested);
-            ClearCanvas = new RelayCommand(OnClearRequested);
-
-            _penColor.ValueChanged += UpdateDrawingAttributes;
+            Background = new OpacityColor(Color.FromArgb(255, 30, 30, 30), 0.3f);
         }
 
         public event EventHandler UndoRequested;
@@ -66,6 +51,36 @@ namespace DrawAnywhere.ViewModels
 
         public ObservableCollection<ObservableObject> ChildControls { get; set; }
 
+        public Color BackgroundColor
+        {
+            get => _backgroundColor.BaseColor;
+            set
+            {
+                _backgroundColor.BaseColor = value;
+                OnPropertyChanged(nameof(Background));
+            }
+        }
+
+        public float BackgroundOpacity
+        {
+            get => _backgroundColor.Opacity;
+            set
+            {
+                _backgroundColor.Opacity = value;
+                OnPropertyChanged(nameof(Background));
+            }
+        }
+
+        public OpacityColor Background
+        {
+            get => _backgroundColor;
+            set
+            {
+                _backgroundColor = value;
+                OnPropertyChanged();
+            }
+        }
+
         public DrawingAttributes DrawingAttributes
         {
             get => _drawingAttributes;
@@ -77,6 +92,7 @@ namespace DrawAnywhere.ViewModels
         }
 
         private DrawingAttributes _drawingAttributes;
+        private OpacityColor _backgroundColor;
 
         private ColorSelectionViewModel _colorSelection;
         private PenConfigViewModel _penConfig;
@@ -108,6 +124,36 @@ namespace DrawAnywhere.ViewModels
 
             ChildControls.Remove(ctrl); 
             VisibleControls.Remove(ctrl);
+        }
+
+        private void InitializeUiComponentsCollections()
+        {
+            VisibleControls = new ObservableCollection<ObservableObject>();
+            ChildControls = new ObservableCollection<ObservableObject>();
+
+            ChildControls.CollectionChanged += (s, e) => { OnPropertyChanged(nameof(ChildControls)); };
+            VisibleControls.CollectionChanged += (s, e) => { OnPropertyChanged(nameof(VisibleControls)); };
+        }
+
+        private void InitializeViewModels()
+        {
+            _colorSelection = new ColorSelectionViewModel(_penColor);
+            _penConfig = new PenConfigViewModel(DrawingAttributes);
+            _settings = new SettingsViewModel(this);
+
+            _penConfig.PropertyChanged += (s, e) => OnPropertyChanged(nameof(DrawingAttributes));
+        }
+
+        private void InitializeCommands()
+        {
+            ShowTool = new RelayCommand(ShowUserTool);
+            MakeScreenShot = new RelayCommand(CaptureScreenshot);
+            CallUndo = new RelayCommand(OnUndoCalled);
+            HideOverlay = new RelayCommand(OnHideCalled);
+            HideUi = new RelayCommand(HideUiComponents);
+            ShowOverlay = new RelayCommand(OnOverlayCalled);
+            Quit = new RelayCommand(OnQuitRequested);
+            ClearCanvas = new RelayCommand(OnClearRequested);
         }
 
         private void ShowUserTool(object parameter)

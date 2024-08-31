@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using DrawAnywhere.Models;
 using DrawAnywhere.MvvmCore;
 using DrawAnywhere.Sys;

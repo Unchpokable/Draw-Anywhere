@@ -54,5 +54,9 @@ namespace DrawAnywhere.Sys
 
         [DllImport("gdi32.dll")]
         public static extern IntPtr DeleteDC(IntPtr hDC);
+
+        [DllImport("gdi32.dll", EntryPoint = "DeleteObject")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool DeleteObject([In] IntPtr hObject);
     }
 }

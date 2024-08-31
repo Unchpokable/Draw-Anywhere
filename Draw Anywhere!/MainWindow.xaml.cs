@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Ink;
 using System.Windows.Input;
+using System.Windows.Threading;
 using DrawAnywhere.Models;
 using DrawAnywhere.Sys;
 using DrawAnywhere.ViewModels;
@@ -36,7 +37,6 @@ namespace DrawAnywhere
             ((MainViewModel)DataContext).ShowRequested += (s, e) => ShowOverlay();
             ((MainViewModel)DataContext).CleanupRequested += (s, e) => ClearStrokes();
             ((MainViewModel)DataContext).QuitRequested += (s, e) => Application.Current.Shutdown();
-            
             ((MainViewModel)DataContext).BindCanvasStrokes(DrawField.Strokes);
 
             DrawAnywhereTrayIcon.Icon = Properties.Resources.pen;
@@ -81,8 +81,7 @@ namespace DrawAnywhere
         {
             if (_config.CleanCanvasWhenHide)
             {
-                _lastActions.Clear();
-                DrawField.Strokes.Clear();
+                ClearStrokes();
             }
 
             Hide();

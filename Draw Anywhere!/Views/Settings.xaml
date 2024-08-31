@@ -6,8 +6,8 @@
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:local="clr-namespace:DrawAnywhere.Views"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="800"
-             Height="300" Width="800">
+             d:DesignHeight="320" d:DesignWidth="800"
+             Height="320" Width="800">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -26,6 +26,18 @@
             </Grid.RowDefinitions>
         
             <StackPanel Margin="10">
+
+                <Border BorderBrush="#FFADADAD"
+                        BorderThickness="0 0 0 3">
+                    <Label FontFamily="Tahoma" 
+                           FontWeight="Bold" 
+                           VerticalAlignment="Center"
+                           Foreground="#FFC3C3C3"
+                           FontSize="24">
+                        General
+                    </Label>
+                </Border>
+
                 <Grid Height="60">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="200"/>
@@ -118,6 +130,7 @@
                               IsChecked="{Binding CleanCanvasOnHide}">
                     </CheckBox>
                 </Grid>
+
             </StackPanel>
 
             <Button Grid.Row="1"
