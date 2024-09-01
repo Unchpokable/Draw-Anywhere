@@ -27,6 +27,10 @@
             <DataTemplate x:Shared="True" DataType="{x:Type vm:DirectoryBrowserViewModel}">
                 <view:DirectoryBrowser></view:DirectoryBrowser>
             </DataTemplate>
+
+            <DataTemplate x:Shared="True" DataType="{x:Type vm:CanvasParamsViewModel}">
+                <view:CanvasParams></view:CanvasParams>
+            </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

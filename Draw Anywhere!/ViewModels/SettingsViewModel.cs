@@ -97,6 +97,9 @@ namespace DrawAnywhere.ViewModels
             }
 
             CloseAllDialogs();
+
+            var typedSender = (DirectoryBrowserViewModel)sender;
+            typedSender.Completed -= OnDialogClosed;
         }
 
         private void ToggleAutoRun()

@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
+using System.Windows.Media;
+using ABI.Windows.UI;
 using Tomlyn;
 using Tomlyn.Model;
 
@@ -16,6 +19,9 @@ namespace DrawAnywhere.Models
         public int PenStrokeWidth { get; set; } = 6;
         public bool HighlighterMode { get; set; } = false;
         public bool IgnoreStylusPressure { get; set; } = false;
+
+        public System.Windows.Media.Color CanvasBackgroundColor { get; set; }
+        public float CanvasBackgroundOpacity { get; set; }
 
         public static AppConfig Instance()
         {
@@ -50,6 +56,12 @@ namespace DrawAnywhere.Models
                     ["stroke_height"] = 6,
                     ["highlighter_mode"] = false,
                     ["ignore_stylus_pressure"] = false
+                },
+
+                ["canvas"] = new TomlTable
+                {
+                    ["background_color"] = "#a0a0a0",
+                    ["background_opacity"] = 0.3f
                 }
             };
 
@@ -92,6 +104,14 @@ namespace DrawAnywhere.Models
                     config.HighlighterMode = bool.Parse(penTable["highlighter_mode"].ToString() ?? "false");
                     config.IgnoreStylusPressure = bool.Parse(penTable["ignore_stylus_pressure"].ToString() ?? "false");
                 }
+
+                if (table.ContainsKey("canvas") && table["canvas"] is TomlTable canvasTable)
+                {
+                    config.CanvasBackgroundColor = (System.Windows.Media.Color)ColorConverter.ConvertFromString(canvasTable["background_color"].ToString() ?? "#aaaaaa");
+                    var opacity = canvasTable["background_opacity"].ToString() ?? "0.1";
+
+                    config.CanvasBackgroundOpacity = float.Parse(opacity.Replace(',', '.').Replace('.', '.'), CultureInfo.InvariantCulture);
+                }
             }
 
             _instance = config;
@@ -114,6 +134,11 @@ namespace DrawAnywhere.Models
                     ["stroke_height"] = PenStrokeHeight,
                     ["highlighter_mode"] = HighlighterMode,
                     ["ignore_stylus_pressure"] = IgnoreStylusPressure
+                },
+                ["canvas"] = new TomlTable
+                {
+                    ["background_color"] = CanvasBackgroundColor.ToString(),
+                    ["background_opacity"] = CanvasBackgroundOpacity
                 }
             };
 

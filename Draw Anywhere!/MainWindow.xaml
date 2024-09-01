@@ -165,6 +165,20 @@
                     </Button.Content>
                 </Button>
 
+                <Button Width="50"
+                        Style="{StaticResource MaterialDesignIconButton}"
+                        Background="#FF545454"
+                        Command="{Binding ShowTool}"
+                        CommandParameter="{x:Static viewModels:ModalWindowType.CanvasConfig}"
+                        Margin="10 0 0 0"
+                        x:Name="CanvasParamsButton"
+                        ToolTip="Open program settings">
+                    <Button.Content>
+                        <materialDesign:PackIcon Kind="Canvas"
+                                                 Foreground="White"></materialDesign:PackIcon>
+                    </Button.Content>
+                </Button>
+
             </StackPanel>
         </Border>
     </Grid>

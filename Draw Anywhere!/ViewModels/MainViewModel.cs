@@ -23,11 +23,11 @@ namespace DrawAnywhere.ViewModels
             DrawingAttributes = new DrawingAttributes
                 { Color = _penColor.Value, FitToCurve = true, Height = 6, Width = 6 };
 
+            Background = new OpacityColor(_config.CanvasBackgroundColor, _config.CanvasBackgroundOpacity);
+
             InitializeUiComponentsCollections();
             InitializeViewModels();
             InitializeCommands();
-
-            Background = new OpacityColor(Color.FromArgb(255, 30, 30, 30), 0.3f);
         }
 
         public event EventHandler UndoRequested;
@@ -96,6 +96,7 @@ namespace DrawAnywhere.ViewModels
 
         private ColorSelectionViewModel _colorSelection;
         private PenConfigViewModel _penConfig;
+        private CanvasParamsViewModel _canvasConfig;
         private SettingsViewModel _settings;
 
         private ByRef<Color> _penColor;
@@ -139,6 +140,7 @@ namespace DrawAnywhere.ViewModels
         {
             _colorSelection = new ColorSelectionViewModel(_penColor);
             _penConfig = new PenConfigViewModel(DrawingAttributes);
+            _canvasConfig = new CanvasParamsViewModel(this, Background, _config);
             _settings = new SettingsViewModel(this);
 
             _penConfig.PropertyChanged += (s, e) => OnPropertyChanged(nameof(DrawingAttributes));
@@ -162,6 +164,7 @@ namespace DrawAnywhere.ViewModels
                 return;
 
             _settings.CloseAllDialogs(); // Settings is the only control that can create its own child windows
+            _canvasConfig.CloseDialog();
 
             foreach (var control in ChildControls)
             {
@@ -182,6 +185,10 @@ namespace DrawAnywhere.ViewModels
 
                 case ModalWindowType.Settings:
                     selectedControl = _settings;
+                    break;
+
+                case ModalWindowType.CanvasConfig:
+                    selectedControl = _canvasConfig;
                     break;
                 default:
                     selectedControl = null;
