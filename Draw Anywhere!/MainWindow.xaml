@@ -172,7 +172,7 @@
                         CommandParameter="{x:Static viewModels:ModalWindowType.CanvasConfig}"
                         Margin="10 0 0 0"
                         x:Name="CanvasParamsButton"
-                        ToolTip="Open program settings">
+                        ToolTip="Open canvas settings">
                     <Button.Content>
                         <materialDesign:PackIcon Kind="Canvas"
                                                  Foreground="White"></materialDesign:PackIcon>

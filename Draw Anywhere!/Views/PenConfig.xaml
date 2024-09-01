@@ -125,6 +125,7 @@
                               Margin="10 0 0 5"
                               Foreground="White"
                               IsChecked="{Binding IsHighlighter}"
+                              ToolTip="Turn on\off highlighter mode. In this mode pen will paint a semi-transparent color"
                               Style="{StaticResource MaterialDesignFilterChipOutlineCheckBox}">
                     </CheckBox>
                 </Grid>
@@ -149,7 +150,8 @@
                               Margin="10 0 0 0"
                               Foreground="White"
                               IsChecked="{Binding IgnorePressure}"
-                              Style="{StaticResource MaterialDesignFilterChipOutlineCheckBox}">
+                              Style="{StaticResource MaterialDesignFilterChipOutlineCheckBox}"
+                              ToolTip="If checked, Canvas will ignore stylus pressure in case when you using a graphics tablet to drawing">
 
                     </CheckBox>
                 </Grid>
