@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows;
 using System.Windows.Ink;
 using System.Windows.Input;
-using System.Windows.Threading;
 using DrawAnywhere.Models;
 using DrawAnywhere.Sys;
 using DrawAnywhere.ViewModels;
@@ -83,8 +83,11 @@ namespace DrawAnywhere
             {
                 ClearStrokes();
             }
-
-            Hide();
+            new Thread(() =>
+            {
+                Thread.Sleep(50);
+                Dispatcher.Invoke(Hide);
+            }).Start();
         }
 
         private void OnFocusLost(object sender, EventArgs e)
