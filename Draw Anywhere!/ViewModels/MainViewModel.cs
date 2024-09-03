@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Controls;
 using System.Windows.Ink;
 using System.Windows.Media;
 using DrawAnywhere.Models;
@@ -35,6 +36,7 @@ namespace DrawAnywhere.ViewModels
         public event EventHandler ShowRequested;
         public event EventHandler QuitRequested;
         public event EventHandler CleanupRequested;
+        public event EventHandler<InkCanvasEditingMode> EditingModeChangeRequested;
 
         public StrokeCollection CanvasStrokes { get; set; }
 
@@ -46,6 +48,7 @@ namespace DrawAnywhere.ViewModels
         public RelayCommand ClearCanvas { get; set; }
         public RelayCommand ShowTool { get; set; }
         public RelayCommand MakeScreenShot { get; set; }
+        public RelayCommand ChangeEditingMode { get; set; }
 
         public ObservableCollection<ObservableObject> VisibleControls { get; set; }
 
@@ -103,30 +106,6 @@ namespace DrawAnywhere.ViewModels
 
         private AppConfig _config;
 
-        public void BindCanvasStrokes(StrokeCollection strokes)
-        {
-            CanvasStrokes = strokes;
-            CanvasStrokes.StrokesChanged += OnCanvasStrokesChanged;
-        }
-
-        public void AppendControlChild(ObservableObject ctrl)
-        {
-            if (ctrl == null)
-                return;
-
-            ChildControls.Add(ctrl);
-            VisibleControls.Add(ctrl);
-        }
-
-        public void CloseChild(ObservableObject ctrl)
-        {
-            if (ctrl == null) 
-                return;
-
-            ChildControls.Remove(ctrl); 
-            VisibleControls.Remove(ctrl);
-        }
-
         private void InitializeUiComponentsCollections()
         {
             VisibleControls = new ObservableCollection<ObservableObject>();
@@ -156,6 +135,39 @@ namespace DrawAnywhere.ViewModels
             ShowOverlay = new RelayCommand(OnOverlayCalled);
             Quit = new RelayCommand(OnQuitRequested);
             ClearCanvas = new RelayCommand(OnClearRequested);
+            ChangeEditingMode = new RelayCommand(ChangeEditingModeInternal);
+        }
+
+        public void BindCanvasStrokes(StrokeCollection strokes)
+        {
+            CanvasStrokes = strokes;
+            CanvasStrokes.StrokesChanged += OnCanvasStrokesChanged;
+        }
+
+        public void AppendControlChild(ObservableObject ctrl)
+        {
+            if (ctrl == null)
+                return;
+
+            ChildControls.Add(ctrl);
+            VisibleControls.Add(ctrl);
+        }
+
+        public void CloseChild(ObservableObject ctrl)
+        {
+            if (ctrl == null) 
+                return;
+
+            ChildControls.Remove(ctrl); 
+            VisibleControls.Remove(ctrl);
+        }
+
+        private void ChangeEditingModeInternal(object parameter)
+        {
+            if (parameter is not InkCanvasEditingMode mode)
+                return;
+            // TODO: Change icon here
+            EditingModeChangeRequested?.Invoke(this, mode);
         }
 
         private void ShowUserTool(object parameter)
@@ -232,6 +244,15 @@ namespace DrawAnywhere.ViewModels
 
         private void OnHideCalled(object _)
         {
+            if (VisibleControls.Count > 0)
+            {
+                _settings.CloseAllDialogs(); // Settings is the only control that can create its own child windows
+                _canvasConfig.CloseDialog();
+
+                HideUiComponents(new());
+                return;
+            }
+
             HideRequested?.Invoke(this, EventArgs.Empty);
         }
 

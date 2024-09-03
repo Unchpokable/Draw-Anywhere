@@ -18,7 +18,7 @@ namespace DrawAnywhere.ViewModels
             _notificationManager.Show(new NotificationContent()
             {
                 Title = title, Message = message, Type = NotificationType.Success
-            }, onClick: callback);
+            }, onClick: callback, areaName:"NotificationArea");
         }
 
         public static void ShowError(string title, string message, Action callback = null)
@@ -26,7 +26,7 @@ namespace DrawAnywhere.ViewModels
             _notificationManager.Show(new NotificationContent()
             {
                 Title = title, Message = message, Type = NotificationType.Error
-            }, onClick: callback);
+            }, onClick: callback, areaName: "NotificationArea");
         }
     }
 }

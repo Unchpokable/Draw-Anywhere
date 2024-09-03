@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Ink;
 using System.Windows.Input;
 using DrawAnywhere.Models;
@@ -37,6 +38,7 @@ namespace DrawAnywhere
             ((MainViewModel)DataContext).ShowRequested += (s, e) => ShowOverlay();
             ((MainViewModel)DataContext).CleanupRequested += (s, e) => ClearStrokes();
             ((MainViewModel)DataContext).QuitRequested += (s, e) => Application.Current.Shutdown();
+            ((MainViewModel)DataContext).EditingModeChangeRequested += OnChangeEditingModeChangeRequested;
             ((MainViewModel)DataContext).BindCanvasStrokes(DrawField.Strokes);
 
             DrawAnywhereTrayIcon.Icon = Properties.Resources.pen;
@@ -113,6 +115,11 @@ namespace DrawAnywhere
             _handleDrawAction = true;
         }
 
+        private void OnChangeEditingModeChangeRequested(object sender, InkCanvasEditingMode mode)
+        {
+            DrawField.EditingMode = mode;
+        }
+
         private void HandleStrokesChanged(object sender, StrokeCollectionChangedEventArgs e)
         {
             if (_handleDrawAction) 
@@ -121,22 +128,22 @@ namespace DrawAnywhere
 
         private void FitWindowSizeAndPositionToActiveMonitor()
         {
-            if (WinApi.GetCursorPos(out var cursorPosition))
+            if (!WinApi.GetCursorPos(out var cursorPosition)) return;
+
+            IntPtr monitorHandle = WinApi.MonitorFromPoint(cursorPosition, 2); // 2 = MONITOR_DEFAULTTONEAREST
+
+            MONITORINFO monitorInfo = new MONITORINFO();
+            monitorInfo.cbSize = Marshal.SizeOf(typeof(MONITORINFO));
+
+            if (WinApi.GetMonitorInfo(monitorHandle, ref monitorInfo))
             {
-                IntPtr monitorHandle = WinApi.MonitorFromPoint(cursorPosition, 2); // 2 = MONITOR_DEFAULTTONEAREST
+                var monitorRect = monitorInfo.rcMonitor;
+                Left = monitorRect.left;
+                Top = monitorRect.top;
+                Width = monitorRect.right - monitorRect.left;
+                Height = monitorRect.bottom - monitorRect.top;
 
-                MONITORINFO monitorInfo = new MONITORINFO();
-                monitorInfo.cbSize = Marshal.SizeOf(typeof(MONITORINFO));
-                if (WinApi.GetMonitorInfo(monitorHandle, ref monitorInfo))
-                {
-                    var monitorRect = monitorInfo.rcMonitor;
-                    Left = monitorRect.left;
-                    Top = monitorRect.top;
-                    Width = monitorRect.right - monitorRect.left;
-                    Height = monitorRect.bottom - monitorRect.top;
-
-                    Topmost = true;
-                }
+                Topmost = true;
             }
         }
 
