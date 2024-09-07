@@ -65,26 +65,6 @@ namespace DrawAnywhere.ViewModels
             }
         }
 
-        public Color BackgroundColor
-        {
-            get => _backgroundColor.BaseColor;
-            set
-            {
-                _backgroundColor.BaseColor = value;
-                OnPropertyChanged(nameof(Background));
-            }
-        }
-
-        public float BackgroundOpacity
-        {
-            get => _backgroundColor.Opacity;
-            set
-            {
-                _backgroundColor.Opacity = value;
-                OnPropertyChanged(nameof(Background));
-            }
-        }
-
         public OpacityColor Background
         {
             get => _backgroundColor;
