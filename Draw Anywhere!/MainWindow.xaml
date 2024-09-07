@@ -37,6 +37,18 @@
                     Command="{Binding ShowTool}"
                     CommandParameter="{x:Static viewModels:ModalWindowType.PenConfig}"></KeyBinding>
 
+        <KeyBinding Key="E"
+                    Command="{Binding ChangeEditingMode}"
+                    CommandParameter="{x:Static winControls:InkCanvasEditingMode.EraseByPoint}"></KeyBinding>
+
+        <KeyBinding Key="E" Modifiers="Alt"
+                    Command="{Binding ChangeEditingMode}"
+                    CommandParameter="{x:Static winControls:InkCanvasEditingMode.EraseByStroke}"></KeyBinding>
+
+        <KeyBinding Key="B"
+                    Command="{Binding ChangeEditingMode}"
+                    CommandParameter="{x:Static winControls:InkCanvasEditingMode.Ink}"></KeyBinding>
+
         <KeyBinding Key="S" Modifiers="Alt"
                     Command="{Binding MakeScreenShot}"></KeyBinding>
     </Window.InputBindings>
@@ -206,6 +218,17 @@
                                                  Foreground="White"></materialDesign:PackIcon>
                     </Button.Content>
                 </Button>
+
+                <Border Padding="10"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center">
+                    <materialDesign:PackIcon Kind="{Binding CurrentInputModeIcon}"
+                                             Foreground="White">
+                        <materialDesign:PackIcon.LayoutTransform>
+                            <ScaleTransform ScaleX="2" ScaleY="2"></ScaleTransform>
+                        </materialDesign:PackIcon.LayoutTransform>
+                    </materialDesign:PackIcon>
+                </Border>
 
             </StackPanel>
         </Border>

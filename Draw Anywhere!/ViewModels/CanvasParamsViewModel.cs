@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Windows.Media;
 using DrawAnywhere.Models;
 using DrawAnywhere.MvvmCore;
@@ -39,7 +40,7 @@ namespace DrawAnywhere.ViewModels
 
         public float CanvasBackgroundOpacity
         {
-            get => _canvasColor.Opacity;
+            get => (float)Math.Round(_canvasColor.Opacity, 2);
             set
             {
                 _canvasColor.Opacity = value;

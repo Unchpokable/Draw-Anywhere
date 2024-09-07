@@ -8,7 +8,7 @@ using DrawAnywhere.Models;
 using DrawAnywhere.MvvmCore;
 using DrawAnywhere.Sys;
 using DrawAnywhere.ViewModels.Helpers;
-using Color = System.Windows.Media.Color;
+using MaterialDesignThemes.Wpf;
 
 namespace DrawAnywhere.ViewModels
 {
@@ -25,6 +25,7 @@ namespace DrawAnywhere.ViewModels
                 { Color = _penColor.Value, FitToCurve = true, Height = 6, Width = 6 };
 
             Background = new OpacityColor(_config.CanvasBackgroundColor, _config.CanvasBackgroundOpacity);
+            CurrentInputModeIcon = PackIconKind.Draw;
 
             InitializeUiComponentsCollections();
             InitializeViewModels();
@@ -53,6 +54,16 @@ namespace DrawAnywhere.ViewModels
         public ObservableCollection<ObservableObject> VisibleControls { get; set; }
 
         public ObservableCollection<ObservableObject> ChildControls { get; set; }
+
+        public PackIconKind CurrentInputModeIcon
+        {
+            get => _inputModeIcon;
+            set
+            {
+                _inputModeIcon = value;
+                OnPropertyChanged();
+            }
+        }
 
         public Color BackgroundColor
         {
@@ -93,6 +104,8 @@ namespace DrawAnywhere.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        private PackIconKind _inputModeIcon;
 
         private DrawingAttributes _drawingAttributes;
         private OpacityColor _backgroundColor;
@@ -166,7 +179,21 @@ namespace DrawAnywhere.ViewModels
         {
             if (parameter is not InkCanvasEditingMode mode)
                 return;
-            // TODO: Change icon here
+
+            switch (mode)
+            {
+                case InkCanvasEditingMode.Ink:
+                    CurrentInputModeIcon = PackIconKind.Draw;
+                    break;
+                case InkCanvasEditingMode.EraseByPoint:
+                    CurrentInputModeIcon = PackIconKind.EraserVariant;
+                    break;
+                case InkCanvasEditingMode.EraseByStroke:
+                    CurrentInputModeIcon = PackIconKind.Eraser;
+                    break;
+            }
+
+
             EditingModeChangeRequested?.Invoke(this, mode);
         }
 
